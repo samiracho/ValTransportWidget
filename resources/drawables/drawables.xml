@@ -3,4 +3,9 @@
      <drawable-list id="MainLayout_fill">
             <shape type="rectangle" x="center" y="center" width="160" height="1" color="Graphics.COLOR_WHITE"/>     
      </drawable-list>
+     <drawable-list id="CommError">
+     	<shape type="rectangle" x="0" y="0" width="200" height="20" color="Graphics.COLOR_RED"/>
+     	<shape type="rectangle" x="107" y="4" width="2" height="2" color="Graphics.COLOR_WHITE"/>
+     	<shape type="rectangle" x="107" y="7" width="2" height="8" color="Graphics.COLOR_WHITE"/>
+     </drawable-list>
 </drawables>
