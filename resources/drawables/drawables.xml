@@ -1,0 +1,6 @@
+<drawables>
+     <bitmap id="LauncherIcon" filename="valenbisi.png" />
+     <drawable-list id="MainLayout_fill">
+            <shape type="rectangle" x="center" y="center" width="160" height="1" color="Graphics.COLOR_WHITE"/>     
+     </drawable-list>
+</drawables>
