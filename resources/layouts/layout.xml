@@ -1,8 +1,10 @@
-<layout id="MainLayout">
-	<drawable id="MainLayout_fill" />
-    <label id="station1Name" x="60"  y="120" text="Station 1" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
-	<label id="station1Avai" x="60"  y="140" text="N/A" font="Graphics.FONT_MEDIUM" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
-	<label id="station2Name" x="155" y="120" text="Station 2" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
-	<label id="station2Avai" x="155" y="140" text="N/A" font="Graphics.FONT_MEDIUM" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
-	<label id="lastUpdate"   x="center" y="190" text="5m" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
-</layout>
+<layouts>
+	<layout id="MainLayout">
+		<drawable id="MainLayout_fill" />
+	    <label id="station1Name" x="60"  y="120" text="Station 1" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+		<label id="station1Avai" x="60"  y="140" text="N/A" font="Graphics.FONT_MEDIUM" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+		<label id="station2Name" x="155" y="120" text="Station 2" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+		<label id="station2Avai" x="155" y="140" text="N/A" font="Graphics.FONT_MEDIUM" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+		<label id="lastUpdate"   x="center" y="190" text="5m" font="Graphics.FONT_SYSTEM_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+	</layout>
+</layouts>
