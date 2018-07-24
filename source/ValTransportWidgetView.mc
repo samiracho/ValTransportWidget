@@ -6,8 +6,7 @@ using Toybox.System;
 class ValTransportWidgetView extends WatchUi.View {
 
 	hidden var _data    = null;
-	hidden var updated  = false;
-	var bikeStations    = "166,13";
+	hidden var _error   = null;
     var station1NameView;
     var station1AvaiView;
 	var station2NameView;
@@ -24,13 +23,13 @@ class ValTransportWidgetView extends WatchUi.View {
     };
 	
     function initialize() {
-        View.initialize();
-        _data = Application.getApp().getProperty("STATIONSDATA");     
+        View.initialize();   
     }
 
     // Load your resources here
     function onLayout(dc) {
         setLayout(Rez.Layouts.MainLayout(dc));
+        _data = Application.getApp().getProperty("STATIONSDATA");  
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -43,26 +42,31 @@ class ValTransportWidgetView extends WatchUi.View {
 		station2AvaiView = View.findDrawableById("station2Avai");
 		viewLastUpdate   = View.findDrawableById("lastUpdate");
 		
-    	makeRequest();
-    	printData();
+		printData();
+    }
+    
+    function onDataRetrieved(data) {
+    	if (data instanceof Dictionary) {
+    		_error = null;
+    		_data  = data;	
+    		Application.getApp().setProperty("STATIONSDATA", data);
+    	} else {
+    		_error = data;
+    		WatchUi.requestUpdate();
+    	}
     }
 
     // Update the view
     function onUpdate(dc) {
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
-        
-        System.println("onUpdate");
-        
-        var mySettings = System.getDeviceSettings();
-        checkConnected(dc, mySettings);
-        
-        if(updated) {
-        	System.println("Data updated");
-        	printData();
-        	updated = false;
-        }
-        
+		
+		if(_error) {
+			var commErrorLayout = new Rez.Drawables.CommError();
+    		commErrorLayout.draw(dc);
+		}
+		
+        printData();        
     }
 
     // Called when this View is removed from the screen. Save the
@@ -72,68 +76,37 @@ class ValTransportWidgetView extends WatchUi.View {
     
     }
     
-	function checkConnected(dc, mySettings){
-		if(!mySettings.phoneConnected){
-			var commErrorLayout = new Rez.Drawables.CommError();
-    		commErrorLayout.draw(dc);
-    		return false;
-		} else {
-			return true;
-		}
-	}
-    
-    function makeRequest() {
-        Communications.makeWebRequest(
-            "https://script.google.com/macros/s/AKfycbxSzTHbpz5Lp4YCfH8qK2kkoD_iIjXgw1q8x38ixFrbMHtxb-E7/exec?number="+bikeStations+"&fields=address",{},
-            {
-                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
-            },
-            method(:onReceive)
-        );
-    }
-    
-    function onReceive(responseCode, data) {
-        if (responseCode == 200) {
-             
-             calcUpdatedSince(data);
-             Application.getApp().setProperty("STATIONSDATA", data);
-             _data = data;
-             updated = true;
-             WatchUi.requestUpdate();
-             
-
-        } else {
-            Toybox.System.println("Failed to load\nError: " + responseCode.toString());
-        }
-    }
-    
     function printData(){
         
-        if(_data != null) {
+        if(_data instanceof Dictionary) {
+            
         	var station1Name = cutText(_data["stations"][0]["address"],7);
         	var station2Name = cutText(_data["stations"][1]["address"],7);
         	
+        	// Bike station 1
         	station1NameView.setText(station1Name);
         	station1AvaiView.setText(_data["stations"][0]["available"]);
         	station1AvaiView.setColor(colors.get(_data["stations"][0]["color"]));
         	
+        	// Bike station 2    	
         	station2NameView.setText(station2Name);
         	station2AvaiView.setText(_data["stations"][1]["available"]);
         	station2AvaiView.setColor(colors.get(_data["stations"][1]["color"]));
         	
-			viewLastUpdate.setText(_data["updatedSince"]);
+			viewLastUpdate.setText(calcUpdatedSince());
         }
+        return true;
     }
     
-    function calcUpdatedSince(data){
-    	var lastUpdate = data["lastUpdateEpoch"].toNumber();
+    function calcUpdatedSince(){
+    	var lastUpdate = _data["lastUpdateEpoch"].toNumber();
 	  	var now        = Time.now().value();
 	  	var diffSecs   = now - lastUpdate;
 	  	
 	  	var minutes    = Math.floor(diffSecs / 60);
 	  	var seconds    = diffSecs - minutes * 60;
 	  	var text       = minutes > 0 ? minutes+"m "+seconds+"s" : seconds+"s";
-	  	data.put("updatedSince", text);
+	  	return text;
     }
     
     function cutText(text, maxSize) {

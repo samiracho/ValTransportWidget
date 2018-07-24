@@ -19,6 +19,7 @@ class ValTransportWidgetApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        return [ new ValTransportWidgetView() ];
+    	var widgetView = new ValTransportWidgetView();
+        return [ widgetView, new UpdateBehaviorDelegate(widgetView.method(:onDataRetrieved)) ];
     }
 }
