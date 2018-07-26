@@ -7,15 +7,10 @@ class UpdateBehaviorDelegate extends WatchUi.BehaviorDelegate {
  	var callback;
  	var bikeStations      = "166,13";
  	var requestInProgress = false;
- 	var progressBar;
     
     function initialize(handler) {
         WatchUi.BehaviorDelegate.initialize();
         callback = handler;   
-        progressBar = new WatchUi.ProgressBar(
-            "Actualizando",
-            null
-        );
         getData();
     }
     
@@ -35,7 +30,7 @@ class UpdateBehaviorDelegate extends WatchUi.BehaviorDelegate {
     
     function makeRequest() {
         requestInProgress = true;
-        setProgressBar(true);
+		callback.invoke(requestInProgress);
         Communications.makeWebRequest(
             "https://script.google.com/macros/s/AKfycbxSzTHbpz5Lp4YCfH8qK2kkoD_iIjXgw1q8x38ixFrbMHtxb-E7/exec?number="+bikeStations+"&fields=address",{},
             {
@@ -47,23 +42,12 @@ class UpdateBehaviorDelegate extends WatchUi.BehaviorDelegate {
     
     function onReceive(responseCode, data) {
         requestInProgress = false;
+        callback.invoke(requestInProgress);
         if (responseCode == 200) {
              callback.invoke(data);
         } else {
             callback.invoke("Failed to load\nError: " + responseCode.toString());
         }
-        setProgressBar(false);
     }
     
-    function setProgressBar(show){  
-    	if (show) {
-	        WatchUi.pushView(
-	            progressBar,
-	            new ProgressDelegate(),
-	            WatchUi.SLIDE_IMMEDIATE
-	        );
-	    } else {
-	    	WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-	    }
-    }
 }

@@ -7,6 +7,7 @@ class ValTransportWidgetView extends WatchUi.View {
 
 	hidden var _data    = null;
 	hidden var _error   = null;
+	hidden var _loading = null;
     var station1NameView;
     var station1AvaiView;
 	var station2NameView;
@@ -46,14 +47,19 @@ class ValTransportWidgetView extends WatchUi.View {
     }
     
     function onDataRetrieved(data) {
+    	
     	if (data instanceof Dictionary) {
     		_error = null;
     		_data  = data;	
     		Application.getApp().setProperty("STATIONSDATA", data);
+    	} else if (data instanceof Boolean) {
+    		_loading = data;
     	} else {
     		_error = data;
-    		WatchUi.requestUpdate();
+    		
     	}
+    	
+    	WatchUi.requestUpdate();
     }
 
     // Update the view
@@ -65,8 +71,10 @@ class ValTransportWidgetView extends WatchUi.View {
 			var commErrorLayout = new Rez.Drawables.CommError();
     		commErrorLayout.draw(dc);
 		}
-		
-        printData();        
+        printData();
+        
+        dc.setColor(_loading ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(214, 60, 16);        
     }
 
     // Called when this View is removed from the screen. Save the
