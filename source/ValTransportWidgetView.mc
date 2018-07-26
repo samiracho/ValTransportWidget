@@ -13,7 +13,11 @@ class ValTransportWidgetView extends WatchUi.View {
 	var station2NameView;
 	var station2AvaiView;
 	var viewLastUpdate;
-
+	
+	// Timer icon
+    var movX = 201;
+    var movY  = 62;
+    var coord = [ [movX, movY], [movX+5, movY], [movX+2.5,movY+2.5], [movX+5, movY+6], [movX-1, movY+6],[movX+2.5,movY+2.5]];
 	
 	hidden var colors = {
     	"1"=>Graphics.COLOR_DK_GRAY,
@@ -24,7 +28,7 @@ class ValTransportWidgetView extends WatchUi.View {
     };
 	
     function initialize() {
-        View.initialize();   
+        View.initialize();  
     }
 
     // Load your resources here
@@ -74,7 +78,11 @@ class ValTransportWidgetView extends WatchUi.View {
         printData();
         
         dc.setColor(_loading ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(214, 60, 16);        
+        dc.fillCircle(214, 60, 18);   
+        
+        // Timer icon
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_WHITE);
+        dc.fillPolygon(coord);  
     }
 
     // Called when this View is removed from the screen. Save the
