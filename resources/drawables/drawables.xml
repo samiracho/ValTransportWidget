@@ -8,4 +8,8 @@
      	<shape type="rectangle" x="107" y="4" width="2" height="2" color="Graphics.COLOR_WHITE"/>
      	<shape type="rectangle" x="107" y="7" width="2" height="8" color="Graphics.COLOR_WHITE"/>
      </drawable-list>
+     <drawable-list id="Loading">
+     	<shape type="rectangle" x="0" y="0" width="210" height="24" color="Graphics.COLOR_GREEN"/>
+     	<shape type="polygon" points="[[106,8],[111,8],[108,10],[111,14],[105,14],[108, 10]]" x="0" y="0" color="Gfx.COLOR_WHITE" />
+     </drawable-list>
 </drawables>

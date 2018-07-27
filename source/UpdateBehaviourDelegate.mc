@@ -23,14 +23,14 @@ class UpdateBehaviorDelegate extends WatchUi.BehaviorDelegate {
     		callback.invoke("COMM_ERROR");
     	} else {
     		if( !requestInProgress ){
+    		    requestInProgress = true;
+        		callback.invoke(requestInProgress);
     			makeRequest();
     		}
     	}
     }
     
     function makeRequest() {
-        requestInProgress = true;
-		callback.invoke(requestInProgress);
         Communications.makeWebRequest(
             "https://script.google.com/macros/s/AKfycbxSzTHbpz5Lp4YCfH8qK2kkoD_iIjXgw1q8x38ixFrbMHtxb-E7/exec?number="+bikeStations+"&fields=address",{},
             {

@@ -7,17 +7,15 @@ class ValTransportWidgetView extends WatchUi.View {
 
 	hidden var _data    = null;
 	hidden var _error   = null;
-	hidden var _loading = null;
+	hidden var _loading = false;
+	
     var station1NameView;
     var station1AvaiView;
 	var station2NameView;
 	var station2AvaiView;
 	var viewLastUpdate;
-	
-	// Timer icon
-    var movX = 201;
-    var movY  = 62;
-    var coord = [ [movX, movY], [movX+5, movY], [movX+2.5,movY+2.5], [movX+5, movY+6], [movX-1, movY+6],[movX+2.5,movY+2.5]];
+	var commErrorLayout;
+	var loadingLayout;
 	
 	hidden var colors = {
     	"1"=>Graphics.COLOR_DK_GRAY,
@@ -34,7 +32,10 @@ class ValTransportWidgetView extends WatchUi.View {
     // Load your resources here
     function onLayout(dc) {
         setLayout(Rez.Layouts.MainLayout(dc));
-        _data = Application.getApp().getProperty("STATIONSDATA");  
+        commErrorLayout = new Rez.Drawables.CommError();
+        loadingLayout   = new Rez.Drawables.Loading();
+        _data           = Application.getApp().getProperty("STATIONSDATA");
+         
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -46,43 +47,19 @@ class ValTransportWidgetView extends WatchUi.View {
 		station2NameView = View.findDrawableById("station2Name");
 		station2AvaiView = View.findDrawableById("station2Avai");
 		viewLastUpdate   = View.findDrawableById("lastUpdate");
-		
-		printData();
-    }
-    
-    function onDataRetrieved(data) {
-    	
-    	if (data instanceof Dictionary) {
-    		_error = null;
-    		_data  = data;	
-    		Application.getApp().setProperty("STATIONSDATA", data);
-    	} else if (data instanceof Boolean) {
-    		_loading = data;
-    	} else {
-    		_error = data;
-    		
-    	}
-    	
-    	WatchUi.requestUpdate();
     }
 
     // Update the view
     function onUpdate(dc) {
         // Call the parent onUpdate function to redraw the layout
-        View.onUpdate(dc);
-		
+        View.onUpdate(dc);	
 		if(_error) {
-			var commErrorLayout = new Rez.Drawables.CommError();
-    		commErrorLayout.draw(dc);
-		}
-        printData();
-        
-        dc.setColor(_loading ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(214, 60, 18);   
-        
-        // Timer icon
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_WHITE);
-        dc.fillPolygon(coord);  
+    		commErrorLayout.draw(dc);	
+		} else if (_loading == true) {
+    		loadingLayout.draw(dc);
+        } else {
+        	printData();
+        }
     }
 
     // Called when this View is removed from the screen. Save the
@@ -92,10 +69,24 @@ class ValTransportWidgetView extends WatchUi.View {
     
     }
     
-    function printData(){
-        
+    function onDataRetrieved(data) {
+    	
+    	if (data instanceof Dictionary) {
+    		_error   = null;
+    		_data    = data;	
+    		Application.getApp().setProperty("STATIONSDATA", data);
+    	} else if (data instanceof Boolean) {
+    		_loading = data;
+    	} else {
+    		_error = data;	
+    	}
+    	
+    	WatchUi.requestUpdate();
+    }
+    
+    function printData() {
         if(_data instanceof Dictionary) {
-            
+
         	var station1Name = cutText(_data["stations"][0]["address"],7);
         	var station2Name = cutText(_data["stations"][1]["address"],7);
         	
@@ -111,10 +102,9 @@ class ValTransportWidgetView extends WatchUi.View {
         	
 			viewLastUpdate.setText(calcUpdatedSince());
         }
-        return true;
     }
     
-    function calcUpdatedSince(){
+    function calcUpdatedSince() {
     	var lastUpdate = _data["lastUpdateEpoch"].toNumber();
 	  	var now        = Time.now().value();
 	  	var diffSecs   = now - lastUpdate;
