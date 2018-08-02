@@ -106,12 +106,17 @@ class ValTransportWidgetView extends WatchUi.View {
     
     function calcUpdatedSince() {
     	var lastUpdate = _data["lastUpdateEpoch"].toNumber();
-	  	var now        = Time.now().value();
-	  	var diffSecs   = now - lastUpdate;
-	  	
-	  	var minutes    = Math.floor(diffSecs / 60);
-	  	var seconds    = diffSecs - minutes * 60;
-	  	var text       = minutes > 0 ? minutes+"m "+seconds+"s" : seconds+"s";
+    	var text = "";
+    	
+    	if ( lastUpdate instanceof Number ) { 	
+		  	var now        = Time.now().value();
+		  	var diffSecs   = now - lastUpdate;  	
+		  	var minutes    = Math.floor(diffSecs / 60);
+		  	var seconds    = diffSecs - minutes * 60;
+		  	var text       = minutes > 60 ? "+1h" : ( minutes > 0 ? minutes+"m "+seconds+"s" : seconds+"s" );	  	
+	  	} else {
+	  		text = "N/A";
+	  	}
 	  	return text;
     }
     
