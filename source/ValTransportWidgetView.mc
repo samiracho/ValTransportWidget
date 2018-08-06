@@ -47,6 +47,7 @@ class ValTransportWidgetView extends WatchUi.View {
 		station2NameView = View.findDrawableById("station2Name");
 		station2AvaiView = View.findDrawableById("station2Avai");
 		viewLastUpdate   = View.findDrawableById("lastUpdate");
+		printData();
     }
 
     // Update the view
@@ -113,7 +114,7 @@ class ValTransportWidgetView extends WatchUi.View {
 		  	var diffSecs   = now - lastUpdate;  	
 		  	var minutes    = Math.floor(diffSecs / 60);
 		  	var seconds    = diffSecs - minutes * 60;
-		  	var text       = minutes > 60 ? "+1h" : ( minutes > 0 ? minutes+"m "+seconds+"s" : seconds+"s" );	  	
+		  	text           = minutes > 60 ? "+1h" : ( minutes > 0 ? minutes+"m "+seconds+"s" : seconds+"s" );	  	
 	  	} else {
 	  		text = "N/A";
 	  	}
